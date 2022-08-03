@@ -32,12 +32,48 @@ def sitemap():
 
 @app.route('/user', methods=['GET'])
 def handle_hello():
-
     response_body = {
         "msg": "Hello, this is your GET /user response "
     }
 
     return jsonify(response_body), 200
+
+@app.route('/user/favorites', methods=['GET'])
+def get_users_favorites():
+
+    return jsonify(response_body), 200
+
+@app.route('/people', methods=['GET'])
+def people_todos():
+    #consultas los personajes
+    #devolver personas serializadas
+    return 'personas consultadas', 200
+
+@app.route('/people/<int:people_id>', methods=['GET'])
+def people_id(people_id):
+    person=''
+    #consultas los personajes por id
+    if person != None:
+        return 'persona existe'+person, 200
+    else:
+        return 'No se encontraron registros',404
+
+@app.route('/planets', methods=['GET'])
+def get_planets():
+    #consultas todos los planetas
+    return 'los planetas consultadas',200
+
+@app.route('/planets/<int:planet_id>', methods=['GET'])
+def get_idplanets(planet_id):
+    #consultas los planetas por id
+    if planetas != None:
+        return 'los planetas consultadas',200
+    else:
+        return 'No se encontraron registros',404
+
+
+
+
 
 # this only runs if `$ python src/main.py` is executed
 if __name__ == '__main__':
