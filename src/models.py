@@ -22,7 +22,7 @@ class User(db.Model):
 class Character(db.Model):
     __tablename__='character'
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(250), nullable=True)
+    name = db.Column(db.String(250), nullable=False)
     description = db.Column(db.String(250), nullable=False)
     favoriteses = db.relationship('Favorites', backref="character")
 
@@ -40,7 +40,7 @@ class Character(db.Model):
 class Favorites(db.Model):
     __tablename__ = 'favorites'
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(250), nullable=True)
+    name = db.Column(db.String(250), nullable=False)
     user_id = db.Column(db.Integer, ForeignKey("user.id"), nullable=False)
     planeta_id = db.Column(db.Integer, ForeignKey("planets.id"), nullable=True)
     character_id = db.Column(db.Integer, ForeignKey("character.id"), nullable=True)
@@ -60,7 +60,7 @@ class Favorites(db.Model):
 class Planets(db.Model):
     __tablename__='planets'
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(250), nullable=True)
+    name = db.Column(db.String(250), nullable=False)
     description = db.Column(db.String(250), nullable=False)
     favorites = db.relationship('Favorites', backref="planets")
 
