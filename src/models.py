@@ -11,7 +11,7 @@ class User(db.Model):
     favoriteses = db.relationship('Favorites', backref="owner")
 
     def __repr__(self):
-        return '<User %r>' % self.username
+        return '<User %r>' % self.email
 
     def serialize(self):
         return {
@@ -49,6 +49,41 @@ class Favorites(db.Model):
 
     def __repr__(self):
         return '<Favorites %r>' % self.name
+
+    def __init__(self, name, user_id, planeta_id, people_id):
+        self.name = name
+        self.user_id = user_id
+        self.planeta_id = planeta_id
+        self.people_id = people_id
+
+    @classmethod
+    def new_registro_favorites(cls, name, user_id, planeta_id, people_id):
+        new_registro_favorites = cls(name, user_id, planeta_id, people_id)
+        db.session.add(new_registro_favorites)
+        try:
+            db.session.commit()
+            return new_registro_favorites
+        except Exception as error:
+            print(error)
+            return None
+
+    def update(self, name):
+        self.name = name
+        try:
+            db.session.commit()
+            return self
+        except Exception as error:
+            print(error)
+            return False
+
+    def delete(self):
+        db.session.delete(self)
+        try:
+            db.session.commit()
+            return True
+        except Exception as error:
+            print(error)
+            return False
 
     def serialize(self):
         return {
