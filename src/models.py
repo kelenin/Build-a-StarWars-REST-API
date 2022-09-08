@@ -44,20 +44,21 @@ class Favorites(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(250), nullable=False)
     user_id = db.Column(db.Integer, ForeignKey("user.id"))
-    #planeta_id = db.Column(db.Integer, ForeignKey("planets.id"), nullable=True)
+    planet_id = db.Column(db.Integer, ForeignKey("planets.id"), nullable=True)
     people_id = db.Column(db.Integer, ForeignKey("people.id"), nullable=True)
 
     def __repr__(self):
         return '<Favorites %r>' % self.name
 
-    def __init__(self, name, user_id, people_id):
+    def __init__(self, name, user_id, planet_id, people_id):
         self.name = name
         self.user_id = user_id
+        self.planet_id = planet_id
         self.people_id = people_id
         
     @classmethod
-    def new_entry(cls, name, user_id, people_id):
-        new_registro_favorites = cls(name, user_id, people_id)
+    def new_registro_favorites(cls, name, user_id, planet_id, people_id):
+        new_registro_favorites = cls(name, user_id, planet_id, people_id)
        
         db.session.add(new_registro_favorites)
         try:
@@ -90,6 +91,8 @@ class Favorites(db.Model):
             "id": self.id,
             "name_favorites": self.name,
             "user_id": self.user_id,
+            "planet_id": self.planet_id,
+            "people_id": self.people_id,
         }
 
 class Planets(db.Model):
@@ -97,7 +100,7 @@ class Planets(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(250), nullable=False)
     description = db.Column(db.String(250), nullable=False)
-    #favorites = db.relationship('Favorites', backref="planets")
+    favorites = db.relationship('Favorites', backref="planets")
 
     def __repr__(self):
         return '<Planets %r>' % self.name
