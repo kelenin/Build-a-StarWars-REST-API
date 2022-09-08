@@ -56,31 +56,32 @@ def people_todos():
         [ people.serialize() for people in all_people]
     ), 200
 
-@app.route('/favorites/people', methods=['POST'])
+@app.route('/favorites/people/<int:people_id>', methods=['GET','POST', 'DELETE'])
 def post_people():
     body = request.json
-    if "name" not in body:
-        return 'Debe indicar la descripcion porque es favorito!', 400
-    if "user_id" not in body:
-        return 'Debe indicar el usuario', 400
-    if "people_id" not in body:
-        return 'Debe indicar la persona', 400
-    else:
-        new_row = Favorites.new_registro_favorites(body["name"], body["user_id"], body["people_id"])
+    search = Peoples.query.get(people_id)
+
+    if request.method == 'GET':
+        if search != None:
+            return jsonify(search.serialize()), 200
+        else:
+            return 'No se encontro el people', 404
+    elif request.method == 'POST':
+        if "name" not in body:
+            return 'Debe indicar la descripcion porque es favorito!', 400
+        if "user_id" not in body:
+            return 'Debe indicar el usuario', 400
+        new_row = Favorites.new_registro_favorites(body["name"], body["user_id"],  body["people_id"])
         if new_row == None:
             return 'Un error ha ocurrido, upps!', 500
         else:
             return jsonify(new_row.serialize()), 200
-
-@app.route('/people/<int:people_id>', methods=['GET'])
-def people_id(people_id):
-    #consultas los personajes por id
-    body = request.json
-    search = Peoples.query.get(people_id)
-    if search != None:
-        return jsonify(search.serialize()), 200
     else:
-        return 'No se encontro ese people', 404
+        result = search.delete()
+        if result == True:
+            return f'El people {people_id} ha sido eliminado con exito!', 200
+        else:
+            return 'Un error ha ocurrido, upps!', 500
 
 @app.route('/planets', methods=['GET'])
 def get_planets():
